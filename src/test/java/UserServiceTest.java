@@ -51,6 +51,7 @@ public class UserServiceTest {
             }
 
         } catch (Exception e) {
+            System.out.println("zaha "+e.toString());
             Assert.fail("An exception occurred while testing user save\n" + e);
         }
     }
