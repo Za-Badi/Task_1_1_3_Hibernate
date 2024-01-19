@@ -16,33 +16,26 @@ public class UserDaoJDBCImpl implements UserDao {
                 + "age tinyint NOT NULL, "
                 + "PRIMARY KEY (id))";
         try (Connection myConnection = Util.sqlConnection()) {
-            try (Statement myStatement = myConnection.createStatement()) {
+            Statement myStatement = myConnection.createStatement();
                 myStatement.executeUpdate(createString);
-
-            }
-
-            catch (SQLException e) {
-                System.out.println("zaha is " + e.toString());
-            }
         } catch (SQLException e) {
-            System.out.println("zaha is " + e.toString());
+            System.out.println(e.toString());
         }
     }
 
     public void dropUsersTable() {
         String dropTable = "DROP TABLE USERS";
         try (Connection myConnection = Util.sqlConnection()) {
-            try (Statement myStatement = myConnection.createStatement()) {
-                boolean exists = myConnection.getMetaData()
+            Statement myStatement = myConnection.createStatement();
+            boolean exists = myConnection.getMetaData()
                         .getTables(null, null, "USERS", null)
                         .next();
-                if (exists) {
-                    myStatement.executeUpdate(dropTable);
-                }
-            } catch (SQLException e) {
+            if (exists) {
+                myStatement.executeUpdate(dropTable);
             }
+
         } catch (SQLException e) {
-            System.out.println("zaha is " + e.toString());
+            System.out.println(e.toString());
         }
     }
 
@@ -70,22 +63,18 @@ public class UserDaoJDBCImpl implements UserDao {
         String dropUser = "DELETE FROM USERS "
                 + "WHERE id = ?";
         try (Connection myConnection = Util.sqlConnection()) {
-            try (Statement myStatement = myConnection.createStatement()) {
                 PreparedStatement stmt =
                         myConnection.prepareStatement(dropUser);
                 stmt.setLong(1, id);
                 stmt.execute();
-
-            } catch (SQLException e) {
-            }
         } catch (SQLException e) {
-            System.out.println("zaha is " + e.toString());
+            System.out.println(e.toString());
         }
     }
 
     public List<User> getAllUsers() {
-        try (Connection con = Util.sqlConnection()) {
-            PreparedStatement ps = con.prepareStatement("select * from USERS");
+        try (Connection connection = Util.sqlConnection()) {
+            PreparedStatement ps = connection.prepareStatement("select * from USERS");
             List<User> users = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -93,7 +82,6 @@ public class UserDaoJDBCImpl implements UserDao {
                         new User(rs.getString(2), rs.getString(3), rs.getByte(4));
                 user.setId(rs.getLong(1));
                 users.add(user);
-                System.out.println(user.toString());
             }
             return users;
 
@@ -106,10 +94,9 @@ public class UserDaoJDBCImpl implements UserDao {
     public void cleanUsersTable() {
         String cleanTable = "DELETE FROM USERS ";
         try (Connection myConnection = Util.sqlConnection()) {
-            try (Statement myStatement = myConnection.createStatement()) {
-                Statement stmt = myConnection.createStatement();
-                stmt.execute(cleanTable);
-            }
+            Statement myStatement = myConnection.createStatement();
+                myStatement.execute(cleanTable);
+
         } catch (SQLException e) {
         }
     }
