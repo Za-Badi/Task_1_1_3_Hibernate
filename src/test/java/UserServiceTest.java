@@ -18,7 +18,6 @@ public class UserServiceTest {
     public void dropUsersTable() {
         try {
             userService.dropUsersTable();
-            userService.dropUsersTable();
         } catch (Exception e) {
             Assert.fail("An exception occurred while testing drop table\n" + e);
         }
@@ -40,9 +39,7 @@ public class UserServiceTest {
             userService.dropUsersTable();
             userService.createUsersTable();
             userService.saveUser(testName, testLastName, testAge);
-
             User user = userService.getAllUsers().get(0);
-
             if (!testName.equals(user.getName())
                     || !testLastName.equals(user.getLastName())
                     || testAge != user.getAge()
@@ -51,7 +48,6 @@ public class UserServiceTest {
             }
 
         } catch (Exception e) {
-            System.out.println("zaha "+e.toString());
             Assert.fail("An exception occurred while testing user save\n" + e);
         }
     }
@@ -62,8 +58,10 @@ public class UserServiceTest {
             userService.dropUsersTable();
             userService.createUsersTable();
             userService.saveUser(testName, testLastName, testAge);
+
             userService.removeUserById(1L);
         } catch (Exception e) {
+            System.out.println("zaga "+e.toString());
             Assert.fail("An exception occurred while testing deleting a user by id\n" + e);
         }
     }
@@ -75,7 +73,6 @@ public class UserServiceTest {
             userService.createUsersTable();
             userService.saveUser(testName, testLastName, testAge);
             List<User> userList = userService.getAllUsers();
-
             if (userList.size() != 1) {
                 Assert.fail("Check if the save/delete or create table method works correctly");
             }
@@ -91,7 +88,6 @@ public class UserServiceTest {
             userService.createUsersTable();
             userService.saveUser(testName, testLastName, testAge);
             userService.cleanUsersTable();
-
             if (userService.getAllUsers().size() != 0) {
                 Assert.fail("The method of clearing the user table is implemented incorrectly");
             }
