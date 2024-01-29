@@ -1,10 +1,12 @@
 package jm.task.core.jdbc.dao;
 import java.util.List;
-import javax.persistence.Query;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.junit.Assert;
+
+import javax.persistence.criteria.CriteriaQuery;
 
 public class UserDaoHibernateImpl implements UserDao {
     public UserDaoHibernateImpl() {}
@@ -21,12 +23,10 @@ public class UserDaoHibernateImpl implements UserDao {
                     + "lastName varchar(255) NOT NULL, "
                     + "age tinyint NOT NULL, "
                     + "PRIMARY KEY (id))";
-
             session.createSQLQuery(createString).executeUpdate();
             transaction.commit();
-
         } catch (Exception e) {
-            System.out.print(e.toString());
+            Assert.fail("An exception occurred while testing to create a user table\n" + e.getMessage());
         }
     }
 
@@ -35,11 +35,11 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = null;
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            String sql = String.format("DROP TABLE %s", "users_hibernate");
+            String sql = "DROP TABLE users_hibernate";
             session.createNativeQuery(sql).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            System.out.println(e.toString());
+            Assert.fail("An exception occurred while testing drop table\n" + e);
         }
     }
 
@@ -55,7 +55,7 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            Assert.fail("An exception occurred while testing user save\n" + e);
         }
     }
 
@@ -67,15 +67,22 @@ public class UserDaoHibernateImpl implements UserDao {
             // This makes the pending delete to be done
             session.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            Assert.fail("An exception occurred while testing deleting a user by id\n " + e);
         }
     }
 
     @Override
     public List<User> getAllUsers() {
         try (Session session = Util.getSessionFactory().openSession()) {
-            return session.createCriteria(User.class).list();
+            CriteriaQuery<User> criteria = session.getCriteriaBuilder().createQuery(User.class);
+            return session.createQuery(criteria).getResultList();
+//            return session.createQuery("from User").getResultList();
+//            return session.createCriteria(User.class).list();
         }
+        catch (Exception e){
+            Assert.fail("An exception occurred while trying to get all users from the database\n" + e);
+        }
+        return null;
     }
 
     @Override
@@ -84,10 +91,10 @@ public class UserDaoHibernateImpl implements UserDao {
         try (Session session = Util.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
-            session.createQuery("delete User where id = id").executeUpdate();
+            session.createQuery("delete User").executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            System.out.println(e.toString());
+            Assert.fail("An exception occurred while testing clearing the users table\n" + e);
         }
     }
 }

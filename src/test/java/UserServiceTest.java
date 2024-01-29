@@ -61,7 +61,6 @@ public class UserServiceTest {
 
             userService.removeUserById(1L);
         } catch (Exception e) {
-            System.out.println("zaga "+e.toString());
             Assert.fail("An exception occurred while testing deleting a user by id\n" + e);
         }
     }

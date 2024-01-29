@@ -51,9 +51,6 @@ public class UserDaoJDBCImpl implements UserDao {
             if (i > 0) {
                 System.out.println("User with name - "+name+" added to the database");
             }
-//                        else {
-            //                System.out.println("ROW NOT INSERTED");
-            //            }
         } catch (Exception e) {
             System.out.println(e.toString());
         }
